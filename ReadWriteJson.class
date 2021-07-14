@@ -1,0 +1,76 @@
+import java.io.IOException;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+public class ReadWriteJson{
+  public static void main(String[]args)
+  {
+    JSONParser jp= new JSONParser();
+    //reading the provided json data.
+    try(Filereader j=new FileReader("test.json"))
+    {
+      Object ob = jp.parse(j);
+      JSONArray arr= (JSONArray) ob;
+      System.out.println(arr);
+      //traversing through each entry within JSON data
+      arr.forEach(en -> parsingObj((JSONObject)line));
+    }
+    catch (FileNotFound e)
+    {
+      e.printStackTrace();
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
+    catch (ParseException e)
+    {
+      e.printStackTrace();
+    }
+  }
+  public static void parsingObj(JSONObject line)
+  {
+    int ht=(int) line.get("height");
+    int wt=(int) line.get("weight");
+    double met=ht*0.01;
+    DecimalFormat two = new DecimalFormat("####0.00");
+    double BMI=two.format(wt/met);
+    String BMICategory,Healthrisk;
+    
+    //Determining category and health risk.
+    
+    if(BMI<=18.4)
+    {
+      BMICategory="Underweight";
+      Healthrisk="Malnutrition risk";
+    }
+    else if(BMI>=40)
+    {
+      BMICategory="Very severely obese";
+      Healthrisk="Very High risk";
+    }
+    else if(BMI<=24.9 && BMI>=18.5)
+    {
+      BMICategory="Normal";
+      Healthrisk="Low risk";
+    }
+    else if(BMI>=25 && BMI<=29.9)
+    {
+      BMICategory="Over weight";
+      Healthrisk="Enhanced risk";
+    }
+    else if(BMI>=30 && BMI<=34.9)
+    {
+      BMICategory="Moderetely obese";
+      Healthrisk="Meadium risk";
+    }
+    else if(BMI>=35 && BMI<=39.9)
+    {
+      BMICategory="severely obese";
+      Healthrisk="High risk";
+    }
+    line.put("Body Mass Index BMI",BMI);
+    line.put("BMI Category",BMICategory);
+    line.put("Health risk",Healthrisk);
+  }
+}
